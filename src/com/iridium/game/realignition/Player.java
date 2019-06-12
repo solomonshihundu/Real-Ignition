@@ -17,6 +17,7 @@ public class Player extends GameObject
 		new Animation(3,tex.lambo[0],tex.lambo[1],tex.lambo[2],tex.lambo[3]);
 		
 		
+		
 	}
 	public void tick()
 	{
@@ -24,11 +25,11 @@ public class Player extends GameObject
 		y+=velY;
 		
 		
-		if(handler.isUp()){velY=-3;}
-		else if(!handler.isDown()){velY=0;}
+		if(handler.isAccelerate()){velY=-3;}
+		else if(!handler.isReverse()){velY=0;}
 		
-		if(handler.isDown()){velY=3;}
-		else if(!handler.isUp()){velY=0;}
+		if(handler.isReverse()){velY=3;}
+		else if(!handler.isAccelerate()){velY=0;}
 		
 		if(handler.isLeft()){velX=-3;}
 		else if(!handler.isRight()){velX=0;}
@@ -36,10 +37,7 @@ public class Player extends GameObject
 		if(handler.isRight()){velX=3;}
 		else if(!handler.isLeft()){velX=0;}
 		
-		
-		
-		
-		collision();
+//		collision();
 		
 	}
 
@@ -48,13 +46,13 @@ public class Player extends GameObject
 	{
 	//	handler.setRight(true);
 	
-//		g.drawImage(tex.lambo[7], (int)x, (int)y, null);
 		
-		if(handler.isUp())
+		
+		if(handler.isAccelerate())
 		{
 			g.drawImage(tex.lambo[0], (int)x, (int)y, null);
 		}
-		else if(handler.isDown())
+		else if(handler.isReverse())
 		{
 			g.drawImage(tex.lambo[1], (int)x, (int)y, null);
 		}
@@ -66,7 +64,7 @@ public class Player extends GameObject
 		{
 			g.drawImage(tex.lambo[2], (int)x, (int)y, null);
 		}
-		else if(handler.up_left || (handler.isUp() && handler.isLeft()))
+		else if(handler.up_left || (handler.isAccelerate() && handler.isLeft()))
 		{
 			g.drawImage(tex.lambo[4], (int)x, (int)y, null);
 		}
@@ -82,6 +80,8 @@ public class Player extends GameObject
 		{
 			g.drawImage(tex.lambo[5], (int)x, (int)y, null);
 		}
+		else
+			g.drawImage(tex.lambo[0], (int)x, (int)y, null);
 	   
 	}
 
@@ -90,6 +90,7 @@ public class Player extends GameObject
 	{
 		return new Rectangle((int)x,(int)y,32,32);
 	}
+	/*
 	public void collision()
 	{
 		for(int i=0;i<handler.object.size();i++)
@@ -112,6 +113,6 @@ public class Player extends GameObject
 			   }
 			}
 		}
-	}
+	} */
 
 }

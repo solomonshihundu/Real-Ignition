@@ -2,21 +2,64 @@ package com.iridium.game.realignition;
 
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class Handler 
 {
 	private Textures tex;
+	private int x;
+	private int y;
+	private int [][]map;
+	private int mapHeight;
+	private int mapWidth; 
+	private String myMap;
+	
 	
 	LinkedList<GameObject> object=new LinkedList<GameObject>();
-	public boolean up=false,down=false,right=false,left=false;
+	public boolean accelerate=false,reverse=false,right=false,left=false;
 	public boolean up_right =false,up_left=false,down_right=false,down_left=false;
 	public boolean rotate = false;
 	
-	public Handler(Textures tex)
+	public Handler(String s)
 	{
-		this.tex = tex;
+		this.myMap = s;
+		tex = new Textures();
+		
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(myMap));
+			mapWidth = Integer.parseInt(br.readLine());
+			mapHeight = Integer.parseInt(br.readLine());
+			map = new int[mapHeight][mapWidth]; 
+			
+			String delimiters = " ";
+			
+			for(int row = 0;row < mapHeight;row++)
+			{
+				String line = br.readLine();
+				String [] tokens = line.split(delimiters);
+				for(int col =0; col < mapWidth;col ++)
+				{
+					map[row][col] = Integer.parseInt(tokens[col]);
+				}
+			}
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		}
+		catch(IOException d)
+		{
+			d.printStackTrace();
+		}
+		
+		loadMap();
+	
+		
 	}
 	public void tick()
 	{
@@ -37,69 +80,59 @@ public class Handler
 		}
 		
 	}
-	public void loadLevel(BufferedImage image)
-	{
-		int w=image.getWidth();
-		int h=image.getHeight();
-        
-		for(int xx=0;xx<w;xx++)
-		{
-			for(int yy=0;yy<h;yy++)
-			{
-				int pixel=image.getRGB(xx, yy);
-				
-				int red=(pixel>>16)&0xff;
-				int green=(pixel>>8)&0xff;
-				int blue=(pixel)&0xff;
-				
-				
-				 if(red == 0 && green == 255 && blue == 0)
-				{
-					addObject(new Tree((int)xx*32,(int)yy*32,ID.Tree));
-				}
-		
-			}
-		}
-		
-	}
 	
-	public void loadPlayer(BufferedImage image)
+	public void loadMap()
 	{
-		int w=image.getWidth();
-		int h=image.getHeight();
-        
-		for(int xx=0;xx<w;xx++)
+		for(int row = 0; row < mapHeight; row++)
 		{
-			for(int yy=0;yy<h;yy++)
+			for(int col = 0;col < mapWidth; col++)
 			{
-				int pixel=image.getRGB(xx, yy);
+				int tileType = map[row][col];
 				
-				int red=(pixel>>16)&0xff;
-				int green=(pixel>>8)&0xff;
-				int blue=(pixel)&0xff;
-				
-				 if(red == 0 && green == 0 && blue == 255)
+				if(tileType == GameID.Tree)
 				{
-					addObject(new Player((int)xx*48,(int)yy*48,ID.Player,this,tex));
+					addObject(new Tree((int)x,(int)y,ID.Tree));
 				}
+				
+				
+				else if(tileType == GameID.Player)
+				{
+					addObject(new Player((int)x,(int)y,ID.Player,this,tex));
+				}
+				
+				else if(tileType == GameID.Opponent)
+				{
+					addObject(new Opponent((int)x,(int)y,ID.Opponent,this,tex));
+				}
+				
+				else if(tileType == GameID.Block)
+				{
+					addObject(new Block((int)x,(int)y,ID.Block));
+				}
+						
 			}
 		}
 	}
+		
+	
+	
+	
 	public void clearLevel()
 	{
 		object.clear();
 	}
-	public boolean isUp() {
-		return up;
+	
+	public boolean isAccelerate() {
+		return accelerate;
 	}
-	public void setUp(boolean up) {
-		this.up = up;
+	public void accelerate(boolean up) {
+		this.accelerate = up;
 	}
-	public boolean isDown() {
-		return down;
+	public boolean isReverse() {
+		return reverse;
 	}
-	public void setDown(boolean down) {
-		this.down = down;
+	public void reverse(boolean down) {
+		this.reverse = down;
 	}
 	public boolean isRight() {
 		return right;
@@ -122,6 +155,4 @@ public class Handler
 		object.remove(myObject);
 	}
 	
-	
-
 }

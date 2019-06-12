@@ -25,23 +25,28 @@ public class Game extends Canvas implements Runnable
 	private Spawner spawner;
 	private BufferedImageLoader loader = new BufferedImageLoader();
 	private BufferedImage level_image;
-
 	
 	public Game()
 	{
 				
 		cam = new Camera(0,0);
 		tex = new Textures();
-		handler=new Handler(tex);
+		handler=new Handler("D:\\EclipsePhoton\\RealIgnition\\res\\testmap");
 		this.addKeyListener(new KeyInput(handler,this));
-		hud=new HUD();
+	//           	hud=new HUD();
 		spawner=new Spawner(handler,hud);
 		level_image = tex.gameLevel;
 		
-		handler.loadLevel(level_image);
-		handler.loadPlayer(level_image);
+		
+//		handler.loadLevel(level_image);
+//		handler.loadPlayer(level_image);
 		
 		new Window("NAI-RUSH",WIDTH,HEIGHT,this);
+		
+	}
+	
+	public static enum gameID
+	{
 		
 	}
 
@@ -104,7 +109,7 @@ public class Game extends Canvas implements Runnable
 		
 		g2d.translate(cam.getX(), cam.getY());
 		
-		hud.render(g);
+	//	hud.render(g);
 		
 		g.dispose();
 		bs.show();
@@ -120,7 +125,7 @@ public class Game extends Canvas implements Runnable
 		        cam.tick(handler.object.get(i));
 	          }
      	}
-		hud.tick();
+	//	hud.tick();
 		spawner.tick();
 		handler.tick();
 	

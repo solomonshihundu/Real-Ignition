@@ -18,7 +18,7 @@ public class Spawner
 		if(scoreKeep>100)
 		{
 			scoreKeep=0;
-			hud.setLevel(hud.getLevel()+1);
+		//	hud.setLevel(hud.getLevel()+1);
 			/*
 			if(hud.getLevel()==2)
 			{
